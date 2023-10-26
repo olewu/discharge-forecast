@@ -1,0 +1,27 @@
+Package: RHBV
+Type: Package
+Title: Calibrate and run a HBV model for daily streamflow
+Version: 0.1.0
+Author: Thea R
+Maintainer: Thea R <roksvag@nr.no>
+Description: Using the HBV.IANIGLA package to calibrate a simple, hydrological HBV model for daily stremflow. Daily temperature, precipitation and streamflow data, in addition to area information about the target catchment, are used to estimate 10-12 HBV parameters. The calibrated model can next be used to simulate daily streamflow based on observed and forecasted daily temperature and precipitation.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Depends: Rcpp,	
+	 data.table,
+	 utils,
+	 hydroGOF,
+	 airGR,
+	 ncdf4,
+	 stats,
+	 parallel,
+	 maptools,
+	 HBV.IANIGLA,
+	 roxygen2,
+         DEoptim,
+	 lubridate,
+         imputeTS
+Imports: Rcpp (>= 0.11.0)
+LinkingTo: Rcpp
+RoxygenNote: 7.1.1

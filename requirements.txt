@@ -1,3 +1,16 @@
 # Build requirements
 
 # Package requirements
+geopandas
+netCDF4
+xarray
+pandas
+numpy
+cartopy
+pypdf2
+jupyter # not needed for basic functionality
+matplotlib # not needed for basic functionality
+r-base
+properscoring # not needed for basic forecasting functionality
+statsmodels # not needed for basic forecasting functionality
+quantile_forest # not needed for basic forecasting functionality

@@ -4,7 +4,7 @@ import os
 import time
 
 from discharge_forecast.config import *
-from discharge_forecast.secrets import sildre_api_key
+from discharge_forecast.hidden_secrets import sildre_api_key
 
 def discharge_dl(catch_id_list,
                  date = pd.Timestamp('today'),

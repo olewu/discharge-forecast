@@ -9,7 +9,7 @@ from glob import glob
 import sys
 
 from discharge_forecast.config import *
-from discharge_forecast import secrets
+from discharge_forecast import hidden_secrets
 
 def process_temperature_forecasts(data):
     
@@ -155,7 +155,7 @@ if __name__ == '__main__':
 
                         # Set headers with your API key
                         headers = {
-                            'User-Agent': secrets.metno_api_user,
+                            'User-Agent': hidden_secrets.metno_api_user,
                             # 'Authorization': f'Bearer {api_key}'
                         }
 

@@ -18,8 +18,9 @@ results/**
 !results/**/.gitkeep
 
 discharge_forecast/RHBV/.Rproj.user/
-discharge_forecast/secrets.py
+discharge_forecast/hidden_secrets.py
 
+Rplots.pdf
 *.lintr
 
 # Distribution / packaging

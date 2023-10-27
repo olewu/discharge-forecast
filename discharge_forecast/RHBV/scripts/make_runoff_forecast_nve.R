@@ -7,7 +7,7 @@ type="NSE"
 hbv_params=rbind(fread(file=paste0("results/catchment_HBV_parameters/nve/catchparams_",type,"_1_100.csv")),
                  fread(file=paste0("results/catchment_HBV_parameters/nve/catchparams_",type,"_101_242.csv")))
 
-DATE = Sys.Date() - 1
+DATE = Sys.Date()
 
 startyear=2020
 
@@ -119,6 +119,8 @@ res_vf[,month:=month(date)]
 res_vf[,year:=year(date)]
 res_vf[,day:=day(date)]
 res_vf=res_vf[year>startyear] #remove "burnin" year.
+
+print('saving')
 
 #-----------------------------------------------------------------------------#
 fwrite(res,paste("results/discharge_forecast/nve/daily_",DATE,"T06:00:00Z.csv",sep=""))

@@ -40,7 +40,7 @@ def concatenate_sn_fc(fc_init_date,ts_start,catchments_from='smaakraft',db_path=
 
     # more SN if necessary:
     if ts_start < pd.Timestamp(2022,12,31):
-        old_sn = pd.read_csv(db_path + '/data/historical_data/senorge/{0:s}_catchments/seNorge_daily_{0:s}.csv'.format(catchments_from))
+        old_sn = pd.read_csv(db_path + '/data/historical_data/senorge/{0:s}/seNorge_daily_{0:s}.csv'.format(catchments_from))
         sn_arch_req = old_sn[pd.to_datetime(old_sn.date) >= ts_start].rename(columns={'catchid':'catchname'})
 
     hydro_inp = pd.concat(

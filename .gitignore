@@ -13,6 +13,8 @@ data/**
 !data/**/
 !data/**/.gitkeep
 
+notebooks/
+
 results/**
 !results/**/
 !results/**/.gitkeep

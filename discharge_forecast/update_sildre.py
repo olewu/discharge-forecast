@@ -7,6 +7,7 @@ from discharge_forecast.config import *
 from discharge_forecast.hidden_secrets import sildre_api_key
 
 def discharge_dl(catch_id_list,
+                 catch_area_list,
                  date = pd.Timestamp('today'),
                  base_url='https://hydapi.nve.no/api/v1/Observations?StationID={station}&Parameter={parameter}&ResolutionTime={resolution_time}&ReferenceTime={reference_time}',
                  slow_down=True,
@@ -24,7 +25,7 @@ def discharge_dl(catch_id_list,
 
     failed_catch = []
 
-    for catchment_id in catch_id_list:
+    for catchment_id,catchment_area in zip(catch_id_list,catch_area_list):
 
         url = base_url.format(
             station = catchment_id,
@@ -46,6 +47,7 @@ def discharge_dl(catch_id_list,
             # catch station IDs for requests that were denied (usually 1-5 per daily request)
             # will most likely be available if request is resend
             failed_catch.append(catchment_id)
+            failed_catch_area.append(catchment_area)
         else:
             print(f"Request for station {catchment_id} failed with status code {response.status_code}")
 
@@ -55,11 +57,15 @@ def discharge_dl(catch_id_list,
             data_df = pd.DataFrame(data['data'][0]['observations'])
             data_df.time = pd.to_datetime(data_df.time)
 
+            conv_fac = 1e3/(catchment_area*1e6) * 60*60*24 # 1/area *6*6*2.4 (=~ 87/area)
+            disch_mm = data_df.value.mean()
+
             mean_discharge = pd.DataFrame(
                 {
                     'stationName' : data['data'][0]['stationName'],
                     'catchname' : catchment_id,
                     data['data'][0]['parameterNameEng'] : data_df.value.mean(),
+                    data['data'][0]['parameterNameEng'] + '_mmday' : disch_mm * conv_fac,
                     'quality' : data_df.quality.mean(),
                     'date' : data_df.time[len(data_df)-1].strftime('%Y-%m-%d')
                 },
@@ -86,18 +92,18 @@ def discharge_dl(catch_id_list,
         if slow_down:
             time.sleep(.05)
 
-    return failed_catch, out_file
+    return failed_catch, failed_catch_area, out_file
 
 if __name__ == '__main__':
 
     # run the above function for latest observation (daily mean yesterday 6AM to today 6AM)
     nve_prop = pd.read_csv(os.path.join(proj_base,'results/catchment_properties/nve/nve_prop_and_clim.csv'))
-    failed_catch, out_file = discharge_dl(nve_prop.stat_id)
+    failed_catch, failed_catch_area, out_file = discharge_dl(nve_prop.stat_id, nve_prop.area_total)
 
     # try again for the catchments where data request was denied (error 429):
     start_time = pd.Timestamp('now')
     while failed_catch:
-        failed_catch,_ = discharge_dl(failed_catch)
+        failed_catch, failed_catch_area,_ = discharge_dl(failed_catch, failed_catch_area)
         
         # time out after 5 minutes:
         time_delta = pd.Timestamp('now') - start_time

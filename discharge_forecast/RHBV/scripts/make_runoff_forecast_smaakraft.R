@@ -32,9 +32,6 @@ save_var=c("stat_id","catch_category","utm_east_z33","utm_north_z33","longitude"
 all_prop=all_prop[,.SD,.SDcols=save_var]
 #-----------------------------------------------------------------------------#
 
-
-
-par(mfrow=c(3,3))
 set.seed(2)
 
 #Donor selection properties:

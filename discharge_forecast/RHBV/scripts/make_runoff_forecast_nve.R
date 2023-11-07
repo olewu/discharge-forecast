@@ -17,7 +17,6 @@ vfdat_nve=fread(file="data/historical_data/sildre_nve/catchday.csv")
 catchprop_nve=catchprop_nve[order(area_total),]
 allcatchments=unique(catchprop_nve$stat_id)
 #----------------------------------------------------------------------------------#
-par(mfrow=c(3,3))
 set.seed(2)
 catchs=1:90
 

@@ -51,7 +51,7 @@ def organize_dataframe(DF,organized_df):
     return DF_out
 
 
-def subselect_senorge_to_catchments(catchments_from,time='latest'):
+def subselect_senorge_to_catchments(catchments_from,time='latest',append_latest=False):
 
     selection_index_x, selection_index_y, stat_id = get_indices(catchments_from)
 
@@ -98,6 +98,17 @@ def subselect_senorge_to_catchments(catchments_from,time='latest'):
         df_filename,
         index=False
     )
+
+    if append_latest:
+        file_latest = '{0:s}/data/regular_downloads/senorge/{1:s}/seNorge_2022-12-31_today.csv'.format(
+            proj_base,catchments_from,
+        )
+        organized_dataframe.to_csv(
+            file_latest,
+            mode = 'a',
+            header = not os.path.exists(file_latest),
+            index=False
+        )
 
 if __name__ == '__main__':
 

@@ -42,7 +42,7 @@ sN_arch = read.csv(sN_archive, header = TRUE)
 sN_arch = sN_arch[,c('catchname', 'date', 'prec', 'st', 'elev')]
 sN_arch_sel <- subset(sN_arch, date >= as.Date(sprintf("%s-01-01",startyear)))
 
-sn_full <- rbind(sN_arch_sel,sN_merge)
+sn_full <- unique(rbind(sN_arch_sel,sN_merge))
 sn_full = sn_full[order(sn_full$catchname,sn_full$date),]
 
 hbv_params=rbind(fread(file="results/catchment_HBV_parameters/nve/catchparams_MSE_1_100.csv"),
@@ -70,7 +70,7 @@ properties_to_include=c("utm_east_z33","utm_north_z33","area_total","height_hyps
 #------------------------------------#
 
 allcatchments=unique(all_prop[catch_category=="smaakraft",stat_id])
-res=list(); donorsave=list(); k=1
+donorsave=list(); k=1
 # make double loop to go through every ensemble member:
 ensmem_cols = colnames(FC)[grepl("^st_\\d+$", colnames(FC))]
 for(ensn in 1:length(ensmem_cols)){
@@ -82,10 +82,11 @@ for(ensn in 1:length(ensmem_cols)){
   tcol = sprintf('st_%s',ensn-1)
   columnms = c("catchname","date",pcol,tcol)
   fc_subs <- FC[, .SD, .SDcols = columnms] # -1 since indexing in python begins on 0!
+  names(fc_subs)[names(fc_subs) %in% c(pcol,tcol)] = c("prec","st")
 
   # merge the ensemble member with seNorge:
   sn_tf = copy(sn_full) # [, -which(names(sn_full) == "elev")]
-  names(sn_tf)[names(sn_tf) %in% c("prec","st")] = c(pcol,tcol)
+  # names(sn_tf)[names(sn_tf) %in% c("prec","st")] = c(pcol,tcol)
   sn_tf$date = as.Date(sn_tf$date, format = "%Y-%m-%d")
   # fc_sn_merge = merge(sn_tf, fc_subs, by = 'catchname', all = TRUE)
   fc_subs$elev = NA
@@ -112,7 +113,6 @@ for(ensn in 1:length(ensmem_cols)){
     donortab=find_my_donors(our_properties,my_id=currcatch,properties_to_include,to_scale=TRUE)
     mydonors=donortab[2:(n_donors+1),]
     donor_id=unique(mydonors$stat_id)
-
 
     hypsovec=unlist(our_properties[stat_id==currcatch,.(height_minimum,height_hypso_10,height_hypso_20,height_hypso_30,
                                                         height_hypso_40,height_hypso_50,height_hypso_60,height_hypso_70,

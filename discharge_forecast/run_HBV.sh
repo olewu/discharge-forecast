@@ -30,16 +30,16 @@ if [ ! -e /projects/NS9001K/owul/projects/discharge_forecast/results/discharge_f
 then
 # make HBV model run for nve catchments:
 Rscript /projects/NS9001K/owul/projects/discharge_forecast/discharge_forecast/RHBV/scripts/make_runoff_ensemble_forecast_smaakraft.R
-ipython /projects/NS9001K/owul/projects/discharge_forecast/discharge_forecast/compute_discharge_percentiles.py
 else
 echo HBV ensemble forecast runs for smaakraft already done. $date
 fi
 
 
-# if [ ! -e /projects/NS9001K/owul/projects/discharge_forecast/results/discharge_forecast/nve/daily21d_$(date +%Y)-$(date +%m)-$(date +%d) ]
-# then
-# # make HBV model run for nve catchments:
-# Rscript /projects/NS9001K/owul/projects/discharge_forecast/discharge_forecast/RHBV/scripts/make_runoff_ensemble_forecast_nve.R
-# else
-# echo HBV ensemble forecast runs for nve already done. $date
-# fi
+if [ ! -e /projects/NS9001K/owul/projects/discharge_forecast/results/discharge_forecast/nve/daily21d_$(date +%Y)-$(date +%m)-$(date +%d) ]
+then
+# make HBV model run for nve catchments:
+Rscript /projects/NS9001K/owul/projects/discharge_forecast/discharge_forecast/RHBV/scripts/make_runoff_ensemble_forecast_nve.R
+ipython /projects/NS9001K/owul/projects/discharge_forecast/discharge_forecast/compute_discharge_percentiles.py
+else
+echo HBV ensemble forecast runs for nve already done. $date
+fi

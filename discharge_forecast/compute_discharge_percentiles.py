@@ -32,5 +32,5 @@ def compute_percentiles(fc_start,percentiles,catchments):
 if __name__ == '__main__':
     percentiles = np.arange(0,101,5)
     init_date = date.today().strftime('%Y-%m-%d')
-    for catchments in ['smaakraft']: # , 'nve'
+    for catchments in ['smaakraft', 'nve']:
         compute_percentiles(init_date,percentiles,catchments)

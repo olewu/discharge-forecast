@@ -7,11 +7,11 @@ type="NSE"
 hbv_params=rbind(fread(file=paste0("results/catchment_HBV_parameters/nve/catchparams_",type,"_1_100.csv")),
                  fread(file=paste0("results/catchment_HBV_parameters/nve/catchparams_",type,"_101_242.csv")))
 
-DATE = Sys.Date()
+DATE = Sys.Date() # "2024-01-13"
 
-startyear=2020
+# startyear=as.integer(format(Sys.Date(), "%Y")) - 3
 
-sN=unique(fread(file=paste("results/forecast_input/nve/fc_init_",DATE,"T06:00:00Z_merge_sn_2020-01-01.csv",sep=""))) #replace by smaakraft weather data.
+sN=unique(fread(file=paste("results/forecast_input/nve/fc_init_",DATE,"T06:00:00Z_merge_sn.csv",sep=""))) #replace by smaakraft weather data.
 vfdat_nve=fread(file="data/historical_data/sildre_nve/catchday.csv")
 
 catchprop_nve=catchprop_nve[order(area_total),]
@@ -112,12 +112,12 @@ donorsave=rbindlist(donorsave)
 res[,month:=month(date)]
 res[,year:=year(date)]
 res[,day:=day(date)]
-res=res[year>startyear] #remove "burnin" year.
+res=res[-(1:365)] #remove "burnin" year.
 
 res_vf[,month:=month(date)]
 res_vf[,year:=year(date)]
 res_vf[,day:=day(date)]
-res_vf=res_vf[year>startyear] #remove "burnin" year.
+res_vf=res_vf[-(1:365)] #remove "burnin" year. year>startyear
 
 print('saving')
 

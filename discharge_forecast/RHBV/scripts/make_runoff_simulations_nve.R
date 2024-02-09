@@ -4,10 +4,14 @@ setwd("/projects/NS9001K/owul/projects/discharge_forecast/")
 catchprop_nve=fread(file="results/catchment_properties/nve/catchprop_nveapi.csv")
 
 type="NSE"
-hbv_params=rbind(fread(file=paste0("results/catchment_HBV_parameters/catchparams_",type,"_1_100.csv")),
-                 fread(file=paste0("results/catchment_HBV_parameters/catchparams_",type,"_101_242.csv")))
+hbv_params=rbind(fread(file=paste0("results/catchment_HBV_parameters/nve/catchparams_",type,"_1_100.csv")),
+                 fread(file=paste0("results/catchment_HBV_parameters/nve/catchparams_",type,"_101_242.csv")))
 
-sN=unique(fread(file="data/historical_data/senorge/nve/seNorge_daily242.csv")) #replace by smaakraft weather data.
+sN=unique(fread(file="data/historical_data/senorge/nve/seNorge_daily242.csv"))
+sN_old=unique(fread("data/historical_data/senorge/nve/seNorge_daily_nve_1960-1989.csv"))
+
+sN=rbind(sN_old,sN) #if we want to include 1960-1989.
+
 vfdat_nve=fread(file="data/historical_data/sildre_nve/catchday.csv")
 
 catchprop_nve=catchprop_nve[order(area_total),]
@@ -19,7 +23,7 @@ catchs=1:90
 
 for(jj in catchs){
 
-  currcatch=allcatchments[jj] #shuold be a smaakraft catchment.
+  currcatch=allcatchments[jj]
   catchprop_nve[stat_id==currcatch,area_total]
 
   n_donors=5
@@ -28,7 +32,6 @@ for(jj in catchs){
   #----------------------------------------------------------------------------------#
 
   our_properties=copy(catchprop_nve[stat_id%in%hbv_params$stat_id])
-  #must here add the properties of the current smaakraft target catchment.
 
   donortab=find_my_donors(our_properties,my_id=currcatch,properties_to_include,to_scale=TRUE)
   if(is.null(donortab)==TRUE){next}

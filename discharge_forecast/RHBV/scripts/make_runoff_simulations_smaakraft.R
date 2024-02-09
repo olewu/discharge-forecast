@@ -12,15 +12,15 @@ nve_prop[,catch_category:="nve"]
 nve_prop=nve_prop[perc_glacier<=0.1]
 
 sN=fread("data/historical_data/senorge/smaakraft/seNorge_daily_smaakraft.csv")
-# sN_old=fread("RHBV/data/seNorge_daily_smaakraft_1960.csv")
+sN_old=fread("data/historical_data/senorge/smaakraft/seNorge_daily_smaakraft_1960-1989.csv")
 
-# sN=rbind(sN_old,sN) #if we want to include 1960-1989.
+sN=rbind(sN_old,sN) #if we want to include 1960-1989.
 sN=sN[order(catchname,date)]
 
 hbv_params=rbind(fread(file="results/catchment_HBV_parameters/nve/catchparams_MSE_1_100.csv"),
                  fread(file="results/catchment_HBV_parameters/nve/catchparams_MSE_101_242.csv"))
 
-startyear=1990 #1960 for the case where we use seNorge from 1960 ->. Otherwise 1990.
+startyear=1960 #1960 for the case where we use seNorge from 1960 ->. Otherwise 1990.
 #--------------------------------------------------------------------------------------------------#
 
 all_prop=rbind(smaakraft_prop,nve_prop,fill=TRUE)
@@ -75,7 +75,7 @@ for(j in 1:length(allcatchments)){
   target_weather[,N:=.N,date]
   target_weather=target_weather[N==1,]
 
-  alldates=data.table(date=seq(as_date("1990-01-01"),as_date("2022-12-30"),by=1))
+  alldates=data.table(date=seq(as_date("1960-01-01"),as_date("2022-12-31"),by=1))
   target_weather=merge(alldates,target_weather,all.x=TRUE)
   target_weather[,catchname:=currcatch]
 

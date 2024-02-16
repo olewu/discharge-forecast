@@ -17,7 +17,7 @@ def json_extract(data,key,data_type='next_24_hours'):
 
 def collect_daily_percentiles(data,variable,shortname=None,percentiles=[10,50,90]):
 
-    extr = [json_extract(data,'{0:s}_percentile_{1:d}'.format(variable,pctl)) for pctl in percentiles]
+    extr = [json_extract(data,variable) if pctl == 50 else json_extract(data,'{0:s}_percentile_{1:d}'.format(variable,pctl)) for pctl in percentiles]
 
     data_coll = pd.DataFrame(
         {
@@ -87,8 +87,8 @@ if __name__ == '__main__':
                         latitude = np.round(latitude,4)
                         longitude = np.round(longitude,4)
 
-                        # Construct the API endpoint URL
-                        url = 'https://staging.forti.met.no/api/subseasonal/v2/complete?lat={lat}&lon={lon}'.format(lat=latitude,lon=longitude)
+                        # Construct the API endpoint URL (staging version at https://staging.forti.met.no/api/subseasonal/v2/complete?)
+                        url = 'https://api.met.no/weatherapi/subseasonal/1.0/complete?lat={lat}&lon={lon}'.format(lat=latitude,lon=longitude)
 
                         # Set headers with your API key
                         headers = {

@@ -24,6 +24,7 @@ def discharge_dl(catch_id_list,
     out_file = os.path.join(proj_base,'data/regular_downloads/sildre_nve/nve/nve_{date}.csv'.format(date=curr_date_str))
 
     failed_catch = []
+    failed_catch_area = []
 
     for catchment_id,catchment_area in zip(catch_id_list,catch_area_list):
 
@@ -110,3 +111,20 @@ if __name__ == '__main__':
         if time_delta.total_seconds() >= 5*60:
             print('request timed out, stations {:s} are still missing'.format(', '.join(failed_catch)))
             break
+
+
+
+# for dt in ['2023-12-24','2023-12-26','2023-12-27','2023-12-28','2023-12-30','2024-01-01','2024-01-02']:
+#     nve_prop = pd.read_csv(os.path.join(proj_base,'results/catchment_properties/nve/nve_prop_and_clim.csv'))
+#     failed_catch, failed_catch_area, out_file = discharge_dl(nve_prop.stat_id, nve_prop.area_total, date=pd.Timestamp(dt))
+
+#     # try again for the catchments where data request was denied (error 429):
+#     start_time = pd.Timestamp('now')
+#     while failed_catch:
+#         failed_catch, failed_catch_area,_ = discharge_dl(failed_catch, failed_catch_area, date=pd.Timestamp(dt))
+        
+#         # time out after 5 minutes:
+#         time_delta = pd.Timestamp('now') - start_time
+#         if time_delta.total_seconds() >= 5*60:
+#             print('request timed out, stations {:s} are still missing'.format(', '.join(failed_catch)))
+#             break

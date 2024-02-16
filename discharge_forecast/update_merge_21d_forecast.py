@@ -58,7 +58,22 @@ def pp_21d_ens(catchments_from, rdate = date.today(), des_percs = np.arange(0.05
     fc21 = pd.read_csv(proj_base + '/data/regular_downloads/metno_21d/{1:s}/metno_{0:}.csv'.format(rdate,catchments_from))
 
     # load 10-day forecast for the first forecast day:
-    fc10 = pd.read_csv(proj_base + '/data/regular_downloads/metno/{1:s}/metno_{0:}T06:00:00Z.csv'.format(rdate,catchments_from))
+    try:
+        fc10 = pd.read_csv(proj_base + '/data/regular_downloads/metno/{1:s}/metno_{0:}T06:00:00Z.csv'.format(rdate,catchments_from))
+    except:
+        try:
+            fc10 = pd.read_csv(proj_base + '/data/regular_downloads/metno/{1:s}/metno_{0:}T07:00:00Z.csv'.format(rdate,catchments_from))
+        except:
+            try:
+                fc10 = pd.read_csv(proj_base + '/data/regular_downloads/metno/{1:s}/metno_{0:}T05:00:00Z.csv'.format(rdate,catchments_from))
+            except:
+                try:
+                    fc10 = pd.read_csv(proj_base + '/data/regular_downloads/metno/{1:s}/metno_{0:}T08:00:00Z.csv'.format(rdate,catchments_from))
+                except:    
+                    # if current dates retrieval failed, use day-1 forecast of previous day's forecast as substitute for initialization of today's foreacst
+                    prev_day = rdate - timedelta(days=1)
+                    fc10 = pd.read_csv(proj_base + '/data/regular_downloads/metno/{1:s}/metno_{0:}T06:00:00Z.csv'.format(prev_day,catchments_from))
+
     fc10_init = fc10[fc10.date == tmrrw.strftime('%Y-%m-%d')]
 
     #--------create a probabilistic forecast out of the three percentiles of the 21d forecast by fitting parametric distributions--------#
@@ -83,14 +98,18 @@ def pp_21d_ens(catchments_from, rdate = date.today(), des_percs = np.arange(0.05
         sn_hist = pd.concat([sn_hist60,sn_hist])
 
     # subset historical data to only include same calendar period that the forecast covers:
-    calday_list = [dt[5:] for dt in fc21.date.unique()]
+    calday_list = [dt[5:] for dt in fc21.date.unique()] # gets calendar days regardless of year
 
-    datesel = [ii for ii,dt in enumerate(sn_hist.date) if dt[5:] in calday_list]
+    datesel = [ii for ii,dt in enumerate(sn_hist.date) if dt[5:] in calday_list[0] for ii in range(ii,ii+len(calday_list))]
 
     sn_cal_day_sel = sn_hist.iloc[datesel].copy()
     sn_cal_day_sel['year'] = pd.to_datetime(sn_cal_day_sel.date).dt.year
 
-    y_unique = sn_cal_day_sel.year.unique()
+    # exclude 2022 if the forecast period extends into the new year:
+    if pd.Timestamp(fc21.date.unique()[-1]).year - pd.Timestamp(fc21.date.unique()[0]).year:
+        y_unique = np.sort(sn_cal_day_sel.year.unique())[:-1]
+    else:
+        y_unique = np.sort(sn_cal_day_sel.year.unique())
     randy = np.random.choice(y_unique, size=len(prec_resampled), replace=False)
 
     for ii,station in enumerate(sn_cal_day_sel.catchname.unique()):
@@ -99,8 +118,14 @@ def pp_21d_ens(catchments_from, rdate = date.today(), des_percs = np.arange(0.05
             continue
 
         sn_sel = sn_cal_day_sel[sn_cal_day_sel.catchname == station]
+        sn_sel.loc[:,'date'] = pd.to_datetime(sn_sel['date'])
+        sn_sel.set_index('date', inplace=True)
+        sn_sel.index = pd.to_datetime(sn_sel.index)
 
-        TEMPL = np.array([np.concatenate([sn_sel[sn_sel.year == YY].st.to_numpy(), sn_sel[sn_sel.year == YY].prec.to_numpy()]) for YY in randy])
+        # generate a list for the X selected periods:
+        list_collection = [sn_sel[sn_sel.index.isin(pd.date_range(start=pd.Timestamp(str(YY)+'-'+calday_list[0]), periods=len(calday_list), freq='D'))] for YY in randy]
+
+        TEMPL = np.array([np.concatenate([df.st.to_numpy(),df.prec.to_numpy()]) for df in list_collection])
         RANKS = TEMPL.argsort(0).argsort(0)
 
         stat_sel_st = st_df[st_df.catchname == station]
@@ -135,4 +160,4 @@ def pp_21d_ens(catchments_from, rdate = date.today(), des_percs = np.arange(0.05
 
 if __name__ == '__main__':
     for catchmnts in ['smaakraft','nve']:
-        pp_21d_ens(catchmnts, des_percs=np.linspace(0,1,33)[1:-1])
+        pp_21d_ens(catchmnts, des_percs=np.linspace(0,1,33)[1:-1], back_extend=True)

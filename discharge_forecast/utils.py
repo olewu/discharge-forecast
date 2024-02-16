@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import sys
 
 from discharge_forecast.config import proj_base
 
@@ -17,11 +18,19 @@ def concatenate_sn_fc(fc_init_date,ts_start,catchments_from='smaakraft',db_path=
 
     assert fc_init_date >= pd.Timestamp(2023,9,1), 'no forecasts archived before Sept 1, 2023'
 
-    start_time_str = '{:0>4d}-{:0>2d}-{:0>2d}'.format(ts_start.year,ts_start.month,ts_start.day)
-    
     # forecast part:
-    init_time_str = '{:0>4d}-{:0>2d}-{:0>2d}T06:00:00Z'.format(fc_init_date.year,fc_init_date.month,fc_init_date.day)
-    dffc = pd.read_csv(db_path + '/data/regular_downloads/metno/{1:s}/metno_{0:s}.csv'.format(init_time_str,catchments_from))
+    fail = True
+    ih = 6
+    while fail:
+        try:
+            init_time_str = '{0:0>4d}-{1:0>2d}-{2:0>2d}T{3:0>2d}:00:00Z'.format(fc_init_date.year,fc_init_date.month,fc_init_date.day,ih)
+            dffc = pd.read_csv(db_path + '/data/regular_downloads/metno/{1:s}/metno_{0:s}.csv'.format(init_time_str,catchments_from))
+            fail = False
+        except:
+            if ih < 24:
+                ih += 1
+            else:
+                sys.exit()
 
     # updated SN part:
     if ts_start < pd.Timestamp(2022,12,31):
@@ -52,7 +61,7 @@ def concatenate_sn_fc(fc_init_date,ts_start,catchments_from='smaakraft',db_path=
     ).sort_values(['catchname','date']).reset_index(drop=True)
 
     if save:
-        svpth = db_path + '/results/forecast_input/{2:s}/fc_init_{0:s}_merge_sn_{1:s}.csv'.format(init_time_str,start_time_str,catchments_from)
+        svpth = db_path + '/results/forecast_input/{1:s}/fc_init_{0:s}_merge_sn.csv'.format(init_time_str,catchments_from)
         hydro_inp.to_csv(svpth,index=False)
         print('saving to {0:s}'.format(svpth))
 

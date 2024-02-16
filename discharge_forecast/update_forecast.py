@@ -231,6 +231,7 @@ if __name__ == '__main__':
 
                 DF.to_csv(filename,index=False)
                 if existing_fc:
+                    print('removing old forecast file {:}'.format(existing_fc))
                     sbp.call(['rm','-r'] + existing_fc)
 
             except Exception as e:

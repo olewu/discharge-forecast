@@ -11,5 +11,6 @@ conda activate discharge_forecast
 ipython /projects/NS9001K/owul/projects/discharge_forecast/discharge_forecast/update_forecast.py
 
 else
-echo not running forecast update, forecast already exists. $date
+echo not running forecast update, forecast already exists.
+date
 fi

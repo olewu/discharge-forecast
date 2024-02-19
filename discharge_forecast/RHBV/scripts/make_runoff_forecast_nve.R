@@ -1,5 +1,5 @@
 library(RHBV)
-setwd("/projects/NS9001K/owul/projects/discharge_forecast/")
+setwd("/projects/NS9873K/owul/projects/discharge_forecast/")
 #----------------------------------------------------------------------------------#
 catchprop_nve=fread(file="results/catchment_properties/nve/catchprop_nveapi.csv")
 
@@ -7,7 +7,7 @@ type="NSE"
 hbv_params=rbind(fread(file=paste0("results/catchment_HBV_parameters/nve/catchparams_",type,"_1_100.csv")),
                  fread(file=paste0("results/catchment_HBV_parameters/nve/catchparams_",type,"_101_242.csv")))
 
-DATE = Sys.Date() # "2024-01-13"
+DATE = "2024-02-18" #Sys.Date() # "2024-01-13"
 
 # startyear=as.integer(format(Sys.Date(), "%Y")) - 3
 
@@ -67,7 +67,8 @@ for(jj in catchs){
 
   if(length(hypsovec)==0){next}
   target_weather=sN[catchname==currcatch]
-  target_elev_bands=make_elevation_bands(target_area,hypsovec)
+  # target_elev_bands=make_elevation_bands(target_area,hypsovec)
+  target_elev_bands=data.table(from=hypsovec[1:(length(hypsovec)-1)],to=hypsovec[2:(length(hypsovec))],areal=target_area/(length(hypsovec)-1))
   target_basin_data=make_basin_data(target_elev_bands,refh=target_weather$elev[1])
 
   if(any(is.na(c(target_weather$st,target_weather$prec))==TRUE)){
@@ -90,7 +91,7 @@ for(jj in catchs){
     donorsim_mm=rbind(donorsim_mm,vf_donor$tf_module)
   }
 
-  to_mm_const=1/(sum(target_basin_data$`area(km2)`)*10^6)*60*60*24*10^3
+  to_mm_const=1/(target_area*10^6)*60*60*24*10^3
   donormedian_mm=apply(donorsim_mm,2,median)
   donormedian_cumecs=apply(donorsim_mm*to_mm_const^{-1},2,median)
 

@@ -30,7 +30,7 @@ make_elevation_bands=function(total_area,hypsovec){
 
   from=hypsovec[1:(length(hypsovec)-1)]
   to=hypsovec[2:(length(hypsovec))]
-  subarea=total_area/length(hypsovec)
+  subarea=total_area/(length(hypsovec)-1)
 
   basin=data.table(from=from,to=to,areal=subarea)
 

@@ -1,5 +1,5 @@
 library(RHBV)
-setwd("/projects/NS9001K/owul/projects/discharge_forecast/")
+setwd("/projects/NS9873K/owul/projects/discharge_forecast/")
 #----------------------------------------------------------------------------------#
 catchprop_nve=fread(file="results/catchment_properties/nve/catchprop_nveapi.csv")
 
@@ -161,7 +161,7 @@ for(ensn in 1:length(ensmem_cols)){
       donorsim_mm=rbind(donorsim_mm,vf_donor$tf_module)
     }
 
-    to_mm_const=1/(sum(target_basin_data$`area(km2)`)*10^6)*60*60*24*10^3
+    to_mm_const=1/(target_area*10^6)*60*60*24*10^3
     donormedian_mm=apply(donorsim_mm,2,median)
     donormedian_cumecs=apply(donorsim_mm*to_mm_const^{-1},2,median)
 

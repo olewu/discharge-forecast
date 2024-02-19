@@ -3,7 +3,7 @@ library(imputeTS)
 library(sp)
 # library(rgdal)
 
-setwd("/projects/NS9001K/owul/projects/discharge_forecast/")
+setwd("/projects/NS9873K/owul/projects/discharge_forecast/")
 
 LongLatToUTM<-function(x,y,zone){
   xy <- data.frame(ID = 1:length(x), X = x, Y = y)

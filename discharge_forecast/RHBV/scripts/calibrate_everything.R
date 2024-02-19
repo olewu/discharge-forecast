@@ -1,7 +1,7 @@
 library(RHBV)
 #-----------------------------------------------------------------------------------------------------------#
 #Prepare data:
-setwd("/projects/NS9001K/owul/projects/discharge_forecast/")
+setwd("/projects/NS9873K/owul/projects/discharge_forecast/")
 
 catchday=fread("data/historical_data/sildre_nve/catchday.csv")
 catchday=catchday[,.(time,value,stat_id,stationName)]

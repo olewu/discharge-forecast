@@ -2,7 +2,7 @@
 library(RHBV)
 library(data.table)
 
-setwd("/projects/NS9001K/owul/projects/discharge_forecast/")
+setwd("/projects/NS9873K/owul/projects/discharge_forecast/")
 
 catchprop_nve=fread(file="results/catchment_properties/nve/catchprop_nveapi.csv")
 catchday=fread(file="data/historical_data/sildre_nve/catchday.csv") #1961-1990

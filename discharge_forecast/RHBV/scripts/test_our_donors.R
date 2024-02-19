@@ -4,7 +4,7 @@ library(RHBV)
 #In this script we test which strategy is better.
 #Donorlist.csv is made from donor_search.R. See this script for strategies.
 
-setwd("/projects/NS9001K/owul/projects/discharge_forecast/")
+setwd("/projects/NS9873K/owul/projects/discharge_forecast/")
 catchprop=fread(file="results/catchment_properties/nve/catchprop_nveapi.csv")
 
 #change from MSE to NSE:

@@ -1,7 +1,7 @@
 # Smaakraft Forecasts (new):
-*/10 3-7 * * * sh /projects/NS9001K/owul/projects/discharge_forecast/discharge_forecast/forecast_update.sh >> /projects/NS9001K/owul/projects/discharge_forecast/logs/fc_update.log 2>&1
-30 5-7 * * * sh /projects/NS9001K/owul/projects/discharge_forecast/discharge_forecast/automation_discharge_nve.sh >> /projects/NS9001K/owul/projects/discharge_forecast/logs/sildre_update.log 2>&1
-*/10 7-12 * * * sh /projects/NS9001K/owul/projects/discharge_forecast/discharge_forecast/senorge_update.sh >> /projects/NS9001K/owul/projects/discharge_forecast/logs/sn_update.log 2>&1
-35 1-12 * * * sh /projects/NS9001K/owul/projects/discharge_forecast/discharge_forecast/forecast21_update.sh >> /projects/NS9001K/owul/projects/discharge_forecast/logs/fc21_update.log 2>&1
+*/10 3-7 * * * sh /projects/NS9873K/owul/projects/discharge_forecast/discharge_forecast/forecast_update.sh >> /projects/NS9873K/owul/projects/discharge_forecast/logs/fc_update.log 2>&1
+30 5-7 * * * sh /projects/NS9873K/owul/projects/discharge_forecast/discharge_forecast/automation_discharge_nve.sh >> /projects/NS9873K/owul/projects/discharge_forecast/logs/sildre_update.log 2>&1
+*/10 7-12 * * * sh /projects/NS9873K/owul/projects/discharge_forecast/discharge_forecast/senorge_update.sh >> /projects/NS9873K/owul/projects/discharge_forecast/logs/sn_update.log 2>&1
+35 1-12 * * * sh /projects/NS9873K/owul/projects/discharge_forecast/discharge_forecast/forecast21_update.sh >> /projects/NS9873K/owul/projects/discharge_forecast/logs/fc21_update.log 2>&1
 # run HBV model and push forecast to web-exposed directory:
-10 7-12 * * * sh /projects/NS9001K/owul/projects/discharge_forecast/discharge_forecast/run_HBV.sh >> /projects/NS9001K/owul/projects/discharge_forecast/logs/HBV_run.log 2>&1
+10 7-12 * * * sh /projects/NS9873K/owul/projects/discharge_forecast/discharge_forecast/run_HBV.sh >> /projects/NS9873K/owul/projects/discharge_forecast/logs/HBV_run.log 2>&1

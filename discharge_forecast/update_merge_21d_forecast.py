@@ -100,7 +100,11 @@ def pp_21d_ens(catchments_from, rdate = date.today(), des_percs = np.arange(0.05
     # subset historical data to only include same calendar period that the forecast covers:
     calday_list = [dt[5:] for dt in fc21.date.unique()] # gets calendar days regardless of year
 
-    datesel = [ii for ii,dt in enumerate(sn_hist.date) if dt[5:] in calday_list[0] for ii in range(ii,ii+len(calday_list))]
+    start_seq = calday_list[0]
+    if start_seq == '02-29':
+        start_seq = '01-03'
+
+    datesel = [ii for ii,dt in enumerate(sn_hist.date) if dt[5:] in start_seq for ii in range(ii,ii+len(calday_list))]
 
     sn_cal_day_sel = sn_hist.iloc[datesel].copy()
     sn_cal_day_sel['year'] = pd.to_datetime(sn_cal_day_sel.date).dt.year
@@ -123,7 +127,7 @@ def pp_21d_ens(catchments_from, rdate = date.today(), des_percs = np.arange(0.05
         sn_sel.index = pd.to_datetime(sn_sel.index)
 
         # generate a list for the X selected periods:
-        list_collection = [sn_sel[sn_sel.index.isin(pd.date_range(start=pd.Timestamp(str(YY)+'-'+calday_list[0]), periods=len(calday_list), freq='D'))] for YY in randy]
+        list_collection = [sn_sel[sn_sel.index.isin(pd.date_range(start=pd.Timestamp(str(YY)+'-'+start_seq), periods=len(calday_list), freq='D'))] for YY in randy]
 
         TEMPL = np.array([np.concatenate([df.st.to_numpy(),df.prec.to_numpy()]) for df in list_collection])
         RANKS = TEMPL.argsort(0).argsort(0)
